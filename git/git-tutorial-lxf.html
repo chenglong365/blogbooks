@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en-US" >
+<html lang="en-US" manifest="../manifest.appcache">
     
     <head>
         
@@ -34,7 +34,7 @@
 
 
         
-    <div class="book" data-github="chenglong365/blogbooks" data-level="1.1" data-basepath=".." data-revision="1403860605648">
+    <div class="book" data-github="chenglong365/blogbooks" data-level="1.1" data-basepath=".." data-revision="1403862042523">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="#" class="btn pull-left toggle-summary" aria-label="Toggle summary"><i class="fa fa-align-justify"></i></a>
@@ -301,6 +301,185 @@
 
                 <div class="page-inner">
                 
+                    <section class="normal" id="section-gitbook_3">
+                    
+                        <h1 id="-git-">廖雪峰Git教程学习总结</h1>
+<p>该总结内容来自<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank">廖雪峰老师的Git教程</a>，对于还不会Git的朋友，该教程非常值得一看，史上最浅显易懂了。</p>
+<h2 id="git-">Git的诞生</h2>
+<p>每一个伟大工具的诞生，都有一个传奇的故事。一个伟大的牛人。</p>
+<blockquote>
+<p><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137402760310626208b4f695940a49e5348b689d095fc000" target="_blank">Linus花了两周时间自己用C写了一个分布式版本控制系统，这就是Git！一个月之内，Linux系统的源码已经由Git管理了！...</a></p>
+</blockquote>
+<h2 id="-">创建版本库</h2>
+<p>初始化一个Git仓库，使用<code>git init</code>命令。</p>
+<p>添加文件到Git仓库，分两步：</p>
+<ul>
+<li>第一步，使用命令<code>git add</code>，注意，可反复多次使用，添加多个文件；</li>
+<li>第二步，使用命令<code>git commit</code>，完成。</li>
+</ul>
+<h2 id="-">时光机穿梭</h2>
+<ul>
+<li>要随时掌握工作区的状态，使用<code>git status</code>命令。</li>
+<li>如果git status告诉你有文件被修改过，用<code>git diff</code>可以查看修改内容。</li>
+</ul>
+<h3 id="-">版本回退</h3>
+<ul>
+<li>HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令<code>git reset --hard commit_id</code>。</li>
+<li>穿梭前，用<code>git log</code>可以查看提交历史，以便确定要回退到哪个版本。</li>
+<li>要重返未来，用<code>git reflog</code>查看命令历史，以便确定要回到未来的哪个版本。</li>
+</ul>
+<h3 id="-">工作区和暂存区</h3>
+<p>暂存区是Git非常重要的概念，弄明白了暂存区，就弄明白了Git的很多操作到底干了什么。</p>
+<ul>
+<li>工作区（Working Directory）：你在电脑中看到的目录</li>
+<li>版本库（Repository）：工作区中隐藏目录&quot;.git&quot;。Git的版本库最重要的是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。</li>
+</ul>
+<blockquote>
+<p>我们把文件往Git版本库里添加的时候，是分两步执行的：</p>
+<p>第一步是用“git add”把文件添加进去，实际上就是把文件修改添加到暂存区；</p>
+<p>第二步是用“git commit”提交更改，实际上就是把暂存区的所有内容提交到当前分支。</p>
+<p>可以简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。</p>
+</blockquote>
+<p><img src="images/0.jpg" alt="git add">
+<img src="images/1.jpg" alt="git commit"></p>
+<h3 id="-">管理修改</h3>
+<p>Git是如何跟踪修改的：每次修改，如果不add到暂存区，那就不会加入到commit中。</p>
+<h3 id="-">撤销修改</h3>
+<p>场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令<code>git checkout -file</code>。</p>
+<p>场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令<code>git reset HEAD file</code>，就回到了场景1，第二步按场景1操作。</p>
+<p>场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节（<code>git reset --hard commit_id</code>），不过前提是没有推送到远程库。</p>
+<h3 id="-">删除文件</h3>
+<p>命令<code>git rm</code>用于删除一个文件。</p>
+<p>如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失<strong>最近一次提交后你修改的内容</strong>。</p>
+<h2 id="-">远程仓库</h2>
+<p>创建SSH Key：</p>
+<pre><code>$ ssh-keygen -t rsa -C &quot;youremail@example.com&quot;
+</code></pre><h3 id="-http-www-liaoxuefeng-com-wiki-0013739516305929606dd18361248578c67b8067c8c017b000-0013752340242354807e192f02a44359908df8a5643103a000-"><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013752340242354807e192f02a44359908df8a5643103a000" target="_blank">添加远程库</a></h3>
+<p>要关联一个远程库，使用命令<code>git remote add origin git@server-name:path/repo-name.git</code>；</p>
+<p>关联后，使用命令<code>git push -u origin master</code>第一次推送master分支的所有内容；</p>
+<p>此后，每次本地提交后，只要有必要，就可以使用命令<code>git push origin master</code>推送最新修改；</p>
+<p>分布式版本系统的最大好处之一是在本地工作完全不需要考虑远程库的存在，也就是有没有联网都可以正常工作，而SVN在没有联网的时候是拒绝干活的！当有网络的时候，再把本地提交推送一下就完成了同步，真是太方便了！</p>
+<h3 id="-http-www-liaoxuefeng-com-wiki-0013739516305929606dd18361248578c67b8067c8c017b000-001375233990231ac8cf32ef1b24887a5209f83e01cb94b000-"><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/001375233990231ac8cf32ef1b24887a5209f83e01cb94b000" target="_blank">从远程库克隆</a></h3>
+<p>要克隆一个仓库，首先必须知道仓库的地址，然后使用<code>git clone</code>命令克隆。</p>
+<p>Git支持多种协议，包括https，但通过ssh支持的原生git协议速度最快。</p>
+<h2 id="-">分支管理</h2>
+<h3 id="-">创建与合并分支</h3>
+<p>Git鼓励大量使用分支：</p>
+<p>查看分支：<code>git branch</code></p>
+<p>创建分支：<code>git branch name</code></p>
+<p>切换分支：<code>git checkout name</code></p>
+<p>创建+切换分支：<code>git checkout -b name</code></p>
+<p>合并某分支到当前分支：<code>git merge name</code></p>
+<p>删除分支：<code>git branch -d name</code></p>
+<h3 id="-">解决冲突</h3>
+<p>当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。</p>
+<p>用<code>git log --graph</code>命令可以看到分支合并图。</p>
+<pre><code>git log --graph --pretty=oneline --abbrev-commit
+</code></pre><h3 id="-">分支管理策略</h3>
+<p>Git分支十分强大，在团队开发中应该充分应用。</p>
+<p>合并分支时，加上<code>--no-ff</code>参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而<code>fast forward</code>合并就看不出来曾经做过合并。</p>
+<h4 id="-">分支策略</h4>
+<p>在实际开发中，我们应该按照几个基本原则进行分支管理：</p>
+<p>首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；</p>
+<p>那在哪干活呢？干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，再把dev分支合并到master上，在master分支发布1.0版本；</p>
+<p>你和你的小伙伴们每个人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。</p>
+<p>所以，团队合作的分支看起来就像这样：
+<img src="images/2.png" alt=""></p>
+<h3 id="bug-">Bug分支</h3>
+<p>修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；</p>
+<pre><code>$ git checkout master
+$ git checkout -b issue-101
+$ git add readme.txt
+$ git commit -m &quot;fix bug 101&quot;
+$ git checkout master
+$ git merge --no-ff -m &quot;merged bug fix 101&quot; issue-101
+$ git branch -d issue-101
+</code></pre><p>当手头工作没有完成时，先把工作现场<code>git stash</code>一下，然后去修复bug，修复后，再<code>git stash pop</code>，回到工作现场。</p>
+<pre><code>$ git stash
+去修复某个紧急bug，...，完成回来
+$ git checkout dev
+$ git stash list
+stash@{0}: WIP on dev: 6224937 add merge
+$ git stash pop
+</code></pre><h3 id="feature-">Feature分支</h3>
+<p>开发一个新feature，最好新建一个分支；</p>
+<p>如果要丢弃一个没有被合并过的分支，可以通过<code>git branch -D name</code>强行删除。</p>
+<h3 id="-">多人协作</h3>
+<ul>
+<li>查看远程库信息，使用<code>git remote -v</code>；</li>
+<li>本地新建的分支如果不推送到远程，对其他人就是不可见的；</li>
+<li>从本地推送分支，使用<code>git push origin branch-name</code>，如果推送失败，先用<code>git pull</code>抓取远程的新提交；</li>
+<li>在本地创建和远程分支对应的分支，使用<code>git checkout -b branch-name origin/branch-name</code>，本地和远程分支的名称最好一致；</li>
+<li>建立本地分支和远程分支的关联，使用<code>git branch --set-upstream-to=origin/branch-name branch-name</code>；</li>
+<li>从远程抓取分支，使用<code>git pull</code>，如果有冲突，要先处理冲突。</li>
+</ul>
+<p><strong>多人协作的工作模式通常是这样</strong>：</p>
+<ol>
+<li>首先，可以试图用<code>git push origin branch-name</code>推送自己的修改；</li>
+<li>如果推送失败，则因为远程分支比你的本地更新，需要先用<code>git pull</code>试图合并；</li>
+<li>如果合并有冲突，则解决冲突，并在本地提交；</li>
+<li>没有冲突或者解决掉冲突后，再用<code>git push origin branch-name</code>推送就能成功！</li>
+</ol>
+<p>如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令<code>git branch --set-upstream-to=origin/branch-name branch-name</code>。</p>
+<p>这就是多人协作的工作模式，一旦熟悉了，就非常简单。</p>
+<h2 id="-">标签管理</h2>
+<h3 id="-">创建标签</h3>
+<ul>
+<li>命令<code>git tag name</code>用于新建一个标签，默认为HEAD，也可以指定一个commit id；</li>
+<li><code>-a tagname -m &quot;blablabla...&quot;</code>可以指定标签信息；</li>
+<li><code>-s tagname -m &quot;blablabla...&quot;</code>可以用PGP签名标签；</li>
+<li>命令<code>git tag</code>可以查看所有标签；</li>
+</ul>
+<h3 id="-">操作标签</h3>
+<ul>
+<li>命令<code>git push origin tagname</code>可以推送一个本地标签；</li>
+<li>命令<code>git push origin --tags</code>可以推送全部未推送过的本地标签；</li>
+<li>命令<code>git tag -d tagname</code>可以删除一个本地标签；</li>
+<li>命令<code>git push origin :refs/tags/tagname</code>可以删除一个远程标签。</li>
+</ul>
+<h2 id="-github">使用GitHub</h2>
+<ul>
+<li>在GitHub上，可以任意Fork开源仓库；</li>
+<li>自己拥有Fork后的仓库的读写权限；</li>
+<li>可以推送pull request给官方仓库来贡献代码。</li>
+</ul>
+<p>Github上Fork一个开源仓库后，开源仓库，你在Github上克隆的仓库，以及你自己clone到本地电脑的仓库，之间的关系：
+<img src="images/3.png" alt=""></p>
+<h2 id="-git">自定义Git</h2>
+<h3 id="-">忽略特殊文件</h3>
+<ol>
+<li>忽略某些文件时，需要编写<code>.gitignore</code>。</li>
+<li><code>.gitignore</code>文件本身要放到版本库里，并且可以对<code>.gitignore</code>做版本管理！</li>
+</ol>
+<p><strong>忽略文件的原则是：</strong></p>
+<ol>
+<li>忽略操作系统自动生成的文件，比如缩略图等；</li>
+<li>忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的.class文件；</li>
+<li>忽略你自己的带有敏感信息的配置文件，比如存放口令的配置文件。</li>
+</ol>
+<h3 id="-">配置别名</h3>
+<pre><code>$ git config --global alias.st status
+$ git config --global alias.co checkout
+$ git config --global alias.ci commit
+$ git config --global alias.br branch
+$ git config --global alias.unstage &#39;reset HEAD&#39;
+$ git config --global alias.last &#39;log -1&#39;
+git config --global alias.lg &quot;log --color --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&quot;
+</code></pre><h2 id="-git-">搭建Git服务器</h2>
+<p><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137583770360579bc4b458f044ce7afed3df579123eca000" target="_blank">搭建Git服务器过程</a></p>
+<ul>
+<li>第一步，安装git</li>
+<li>第二步，创建一个git用户，用来运行git服务</li>
+<li>第三步，创建证书登录</li>
+<li>第四步，初始化Git仓库</li>
+<li>第五步，禁用shell登录</li>
+<li>第六步，克隆远程仓库</li>
+</ul>
+<p>Git的官方网站：<a href="http://git-scm.com" target="_blank">http://git-scm.com</a></p>
+
+                    
+                    </section>
+                
                 </div>
             </div>
         </div>
@@ -324,10 +503,6 @@
 
     
     <script src="../gitbook/plugins/gitbook-plugin-mathjax/plugin.js"></script>
-    
-
-    
-    <script src="../gitbook/plugins/gitbook-plugin-livereload/plugin.js"></script>
     
 
 <script>
